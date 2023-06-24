@@ -71,7 +71,8 @@ export const PostCard = ({ post }) => {
                 marginLeft: '10px',
               }}
             >
-              Posted by @{post.username}
+              Posted by{' '}
+              <span style={{ color: 'purple' }}>@{post.username}</span>
             </p>
           </div>
           <p

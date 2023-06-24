@@ -3,9 +3,9 @@ import { Icon } from '@iconify/react';
 import React, { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { MyContext } from '../context/MyContext';
+import { forumData } from '../data';
 
 export const Hero = ({ children }) => {
-  const [users, setUsers] = useState([]);
   const { state, dispatch } = useContext(MyContext);
 
   const getActiveStyle = ({ isActive }) => ({
@@ -29,7 +29,9 @@ export const Hero = ({ children }) => {
         style={{
           height: '100%',
           width: '100%',
-          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
         }}
       >
         <nav
@@ -91,6 +93,42 @@ export const Hero = ({ children }) => {
             <div style={{ padding: '5px' }}>Profile</div>
           </NavLink>
         </nav>
+        <div style={{ display: 'flex', paddingLeft: '100px' }}>
+          <img
+            src={forumData.picUrl}
+            style={{
+              height: '40px',
+              width: '40px',
+              borderRadius: '50% 50%',
+              marginRight: '10px',
+            }}
+          />
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <p
+              style={{
+                fontSize: '14px',
+                color: 'black',
+                margin: '0',
+                textAlign: 'left',
+                fontWeight: 'bold',
+              }}
+            >
+              @{forumData.name}
+            </p>
+
+            <p
+              style={{
+                fontSize: '14px',
+                color: 'gray',
+                margin: '0',
+                marginTop: '5px',
+                textAlign: 'left',
+              }}
+            >
+              @{forumData.username}
+            </p>
+          </div>
+        </div>
       </div>
       <div
         style={{

@@ -8,8 +8,11 @@ import { PostCard } from '../components/PostCard';
 export const Comment = () => {
   const { productId } = useParams();
   const { state, dispatch } = useContext(MyContext);
+  const [post, setPost] = useState({});
 
-  const post = state.allPosts.find((p) => p.id == productId);
+  useEffect(() => {
+    setPost(state.allPosts.find((p) => p.id == productId));
+  }, []);
 
   return (
     <Hero>
@@ -144,7 +147,7 @@ export const Comment = () => {
               justifyContent: 'space-between',
             }}
           >
-            <Link to={`/comment/${post?.postId}`} style={{ display: 'flex' }}>
+            <div style={{ display: 'flex' }}>
               <Icon
                 icon="mdi:comment"
                 color="gray"
@@ -152,7 +155,7 @@ export const Comment = () => {
                 height="25"
                 style={{ cursor: 'pointer' }}
               />
-            </Link>
+            </div>
             <div>
               <Icon
                 icon="mdi:share"
@@ -176,105 +179,111 @@ export const Comment = () => {
             </div>
           </div>
           <div>
-            {post.comments.map((comment) => (
-              <div style={{ display: 'flex' }}>
-                <img
-                  src={comment.picUrl}
-                  style={{
-                    height: '40px',
-                    width: '40px',
-                    borderRadius: '50% 50%',
-                    marginRight: '10px',
-                  }}
-                />
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                  }}
-                >
-                  <p
+            {post.comments === 0 ? (
+              <p>No comments here</p>
+            ) : (
+              post.comments?.map((comment) => (
+                <div style={{ display: 'flex' }}>
+                  <img
+                    src={comment.picUrl}
                     style={{
-                      fontSize: '14px',
-                      color: 'gray',
-                      margin: '0',
-                      textAlign: 'left',
+                      height: '40px',
+                      width: '40px',
+                      borderRadius: '50% 50%',
+                      marginRight: '10px',
                     }}
-                  >
-                    Replying by{' '}
-                    <span style={{ color: 'purple' }}>@{comment.username}</span>
-                  </p>
-
-                  <p
-                    style={{
-                      fontSize: '14px',
-                      color: 'gray',
-                      margin: '0',
-                      marginTop: '5px',
-                      textAlign: 'left',
-                    }}
-                  >
-                    Replying to{' '}
-                    <span style={{ color: 'purple' }}>@{post.username}</span>
-                  </p>
-                  <div
-                    style={{
-                      fontSize: '14px',
-                      textAlign: 'left',
-                      marginTop: '10px',
-                      height: '100%',
-                      border: 'none',
-                      marginBottom: '20px',
-                    }}
-                  >
-                    {comment.comment}
-                  </div>
-                  <div style={{ borderTop: '1px solid #535353' }}></div>
+                  />
                   <div
                     style={{
                       display: 'flex',
-                      padding: '10px',
-
-                      justifyContent: 'space-between',
+                      flexDirection: 'column',
+                      width: '100%',
                     }}
                   >
-                    <div style={{ display: 'flex' }}>
-                      <Icon
-                        icon="mdi:heart"
-                        color="gray"
-                        width="25"
-                        height="25"
-                        style={{ cursor: 'pointer' }}
-                      />
-                      {comment?.likes > 0 && (
-                        <div style={{ fontSize: '16px', marginLeft: '10px' }}>
-                          {comment.likes}
-                        </div>
-                      )}
+                    <p
+                      style={{
+                        fontSize: '14px',
+                        color: 'gray',
+                        margin: '0',
+                        textAlign: 'left',
+                      }}
+                    >
+                      Replying by{' '}
+                      <span style={{ color: 'purple' }}>
+                        @{comment.username}
+                      </span>
+                    </p>
+
+                    <p
+                      style={{
+                        fontSize: '14px',
+                        color: 'gray',
+                        margin: '0',
+                        marginTop: '5px',
+                        textAlign: 'left',
+                      }}
+                    >
+                      Replying to{' '}
+                      <span style={{ color: 'purple' }}>@{post.username}</span>
+                    </p>
+                    <div
+                      style={{
+                        fontSize: '14px',
+                        textAlign: 'left',
+                        marginTop: '10px',
+                        height: '100%',
+                        border: 'none',
+                        marginBottom: '20px',
+                      }}
+                    >
+                      {comment.comment}
                     </div>
-                    <div style={{ display: 'flex' }}>
-                      <Icon
-                        icon="mdi:comment"
-                        color="gray"
-                        width="25"
-                        height="25"
-                        style={{ cursor: 'pointer' }}
-                      />
-                    </div>
-                    <div>
-                      <Icon
-                        icon="mdi:share"
-                        color="gray"
-                        width="25"
-                        height="25"
-                        style={{ cursor: 'pointer' }}
-                      />
+                    <div style={{ borderTop: '1px solid #535353' }}></div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        padding: '10px',
+
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <div style={{ display: 'flex' }}>
+                        <Icon
+                          icon="mdi:heart"
+                          color="gray"
+                          width="25"
+                          height="25"
+                          style={{ cursor: 'pointer' }}
+                        />
+                        {comment?.likes > 0 && (
+                          <div style={{ fontSize: '16px', marginLeft: '10px' }}>
+                            {comment.likes}
+                          </div>
+                        )}
+                      </div>
+                      <div style={{ display: 'flex' }}>
+                        <Icon
+                          icon="mdi:comment"
+                          color="gray"
+                          width="25"
+                          height="25"
+                          style={{ cursor: 'pointer' }}
+                        />
+                      </div>
+                      <div>
+                        <Icon
+                          icon="mdi:share"
+                          color="gray"
+                          width="25"
+                          height="25"
+                          style={{ cursor: 'pointer' }}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>
