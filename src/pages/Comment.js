@@ -8,20 +8,8 @@ import { PostCard } from '../components/PostCard';
 export const Comment = () => {
   const { productId } = useParams();
   const { state, dispatch } = useContext(MyContext);
-  const [post, setPost] = useState({});
-  const [count, setCount] = useState(0);
 
-  const upPost = () => {
-    setCount(count + 1);
-  };
-  const downPost = () => {
-    setCount(count - 1);
-  };
-
-  useEffect(() => {
-    setPost(state.allPosts.find((p) => p.id == productId));
-    setCount(post.upvotes - post.downvotes);
-  }, []);
+  const post = state.allPosts.find((p) => p.id == productId);
 
   return (
     <Hero>
@@ -43,6 +31,7 @@ export const Comment = () => {
         <div
           style={{
             display: 'flex',
+            flexDirection: 'column',
             margin: '40px auto',
             width: '60%',
             paddingBottom: '20px',
@@ -53,31 +42,32 @@ export const Comment = () => {
             color: 'black',
           }}
         >
-          <div style={{ marginRight: '40px' }}>
-            <Icon
-              icon="teenyicons:up-solid"
-              color={count > 0 ? 'blue' : 'gray'}
-              width="30"
-              height="30"
-              style={{ cursor: 'pointer' }}
-              onClick={upPost}
-            />
-            <div style={{ fontSize: '12px' }}>{count}</div>
-            <Icon
-              icon="teenyicons:down-solid"
-              color={count < 0 ? 'red' : 'gray'}
-              width="30"
-              height="30"
-              style={{ cursor: 'pointer' }}
-              onClick={downPost}
-            />
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
+          <div style={{ display: 'flex' }}>
+            <div style={{ marginRight: '40px' }}>
+              <Icon
+                icon="teenyicons:up-solid"
+                color={post.upvotes - post.downvotes > 0 ? 'blue' : 'gray'}
+                width="30"
+                height="30"
+                style={{ cursor: 'pointer' }}
+                onClick={() =>
+                  dispatch({ type: 'UPVOTE_POSTS', payload: post })
+                }
+              />
+              <div style={{ fontSize: '12px' }}>
+                {post.upvotes - post.downvotes}
+              </div>
+              <Icon
+                icon="teenyicons:down-solid"
+                color={post.upvotes - post.downvotes < 0 ? 'red' : 'gray'}
+                width="30"
+                height="30"
+                style={{ cursor: 'pointer' }}
+                onClick={() =>
+                  dispatch({ type: 'DOWNVOTE_POSTS', payload: post })
+                }
+              />
+            </div>
             <div
               style={{
                 display: 'flex',
@@ -143,47 +133,148 @@ export const Comment = () => {
                 {post?.postDescription}
               </div>
             </div>
+          </div>
 
-            <div style={{ borderTop: '1px solid gray' }}></div>
-            <div
-              style={{
-                display: 'flex',
-                padding: '10px',
-                width: '90%',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Link to={`/comment/${post?.postId}`} style={{ display: 'flex' }}>
-                <Icon
-                  icon="mdi:comment"
-                  color="gray"
-                  width="25"
-                  height="25"
-                  style={{ cursor: 'pointer' }}
-                />
-              </Link>
-              <div>
-                <Icon
-                  icon="mdi:share"
-                  color="gray"
-                  width="25"
-                  height="25"
-                  style={{ cursor: 'pointer' }}
-                />
-              </div>
-              <div>
-                <Icon
-                  icon="mdi:bookmark"
-                  color={post?.isBookmarked ? 'blue' : 'gray'}
-                  width="25"
-                  height="25"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => {
-                    dispatch({ type: 'UPDATE_BOOKMARK', payload: post });
+          <div style={{ borderTop: '1px solid gray' }}></div>
+          <div
+            style={{
+              display: 'flex',
+              padding: '10px',
+              width: '90%',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Link to={`/comment/${post?.postId}`} style={{ display: 'flex' }}>
+              <Icon
+                icon="mdi:comment"
+                color="gray"
+                width="25"
+                height="25"
+                style={{ cursor: 'pointer' }}
+              />
+            </Link>
+            <div>
+              <Icon
+                icon="mdi:share"
+                color="gray"
+                width="25"
+                height="25"
+                style={{ cursor: 'pointer' }}
+              />
+            </div>
+            <div>
+              <Icon
+                icon="mdi:bookmark"
+                color={post?.isBookmarked ? 'blue' : 'gray'}
+                width="25"
+                height="25"
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  dispatch({ type: 'UPDATE_BOOKMARK', payload: post });
+                }}
+              />
+            </div>
+          </div>
+          <div>
+            {post.comments.map((comment) => (
+              <div style={{ display: 'flex' }}>
+                <img
+                  src={comment.picUrl}
+                  style={{
+                    height: '40px',
+                    width: '40px',
+                    borderRadius: '50% 50%',
+                    marginRight: '10px',
                   }}
                 />
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: '14px',
+                      color: 'gray',
+                      margin: '0',
+                      textAlign: 'left',
+                    }}
+                  >
+                    Replying by{' '}
+                    <span style={{ color: 'purple' }}>@{comment.username}</span>
+                  </p>
+
+                  <p
+                    style={{
+                      fontSize: '14px',
+                      color: 'gray',
+                      margin: '0',
+                      marginTop: '5px',
+                      textAlign: 'left',
+                    }}
+                  >
+                    Replying to{' '}
+                    <span style={{ color: 'purple' }}>@{post.username}</span>
+                  </p>
+                  <div
+                    style={{
+                      fontSize: '14px',
+                      textAlign: 'left',
+                      marginTop: '10px',
+                      height: '100%',
+                      border: 'none',
+                      marginBottom: '20px',
+                    }}
+                  >
+                    {comment.comment}
+                  </div>
+                  <div style={{ borderTop: '1px solid #535353' }}></div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      padding: '10px',
+
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <div style={{ display: 'flex' }}>
+                      <Icon
+                        icon="mdi:heart"
+                        color="gray"
+                        width="25"
+                        height="25"
+                        style={{ cursor: 'pointer' }}
+                      />
+                      {comment?.likes > 0 && (
+                        <div style={{ fontSize: '16px', marginLeft: '10px' }}>
+                          {comment.likes}
+                        </div>
+                      )}
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                      <Icon
+                        icon="mdi:comment"
+                        color="gray"
+                        width="25"
+                        height="25"
+                        style={{ cursor: 'pointer' }}
+                      />
+                    </div>
+                    <div>
+                      <Icon
+                        icon="mdi:share"
+                        color="gray"
+                        width="25"
+                        height="25"
+                        style={{ cursor: 'pointer' }}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

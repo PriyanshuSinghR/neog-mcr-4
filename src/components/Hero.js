@@ -1,10 +1,12 @@
 import { Icon } from '@iconify/react';
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { MyContext } from '../context/MyContext';
 
 export const Hero = ({ children }) => {
   const [users, setUsers] = useState([]);
+  const { state, dispatch } = useContext(MyContext);
 
   const getActiveStyle = ({ isActive }) => ({
     textDecoration: 'none',
@@ -111,7 +113,10 @@ export const Hero = ({ children }) => {
         <select
           name="post"
           style={{ border: 'none', padding: '10px', backgroundColor: 'gray' }}
+          value={StaticRange.sortTag}
+          onChange={(e) => dispatch({ type: 'SORT', payload: e.target.value })}
         >
+          <option value="select">select</option>
           <option value="latest">Latest Posts</option>
           <option value="most_upvote">Most Upvoted Post</option>
         </select>

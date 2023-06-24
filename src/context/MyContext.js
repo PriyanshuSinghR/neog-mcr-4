@@ -10,6 +10,24 @@ const reduceMy = (state, action) => {
         ...state,
         allPosts: action.payload,
       };
+    case 'UPVOTE_POSTS':
+      return {
+        ...state,
+        allPosts: [...state.allPosts].map((post) =>
+          post.postId === action.payload.postId
+            ? { ...post, upvotes: post.upvotes + 1 }
+            : post,
+        ),
+      };
+    case 'DOWNVOTE_POSTS':
+      return {
+        ...state,
+        allPosts: [...state.allPosts].map((post) =>
+          post.postId === action.payload.postId
+            ? { ...post, downvotes: post.downvotes + 1 }
+            : post,
+        ),
+      };
     case 'UPDATE_BOOKMARK':
       return {
         ...state,
@@ -19,10 +37,10 @@ const reduceMy = (state, action) => {
             : post,
         ),
       };
-    case 'HELPER':
+    case 'SORT':
       return {
         ...state,
-        helper: !state.helper,
+        sortTag: action.payload,
       };
 
     default:
@@ -33,7 +51,7 @@ const reduceMy = (state, action) => {
 export function MyProvider({ children }) {
   const [state, dispatch] = useReducer(reduceMy, {
     allPosts: forumData.posts,
-    helper: false,
+    sortTag: '',
   });
 
   return (

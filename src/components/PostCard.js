@@ -9,12 +9,6 @@ export const PostCard = ({ post }) => {
   const { state, dispatch } = useContext(MyContext);
   const [count, setCount] = useState(post.upvotes - post.downvotes);
 
-  const upPost = () => {
-    setCount(count + 1);
-  };
-  const downPost = () => {
-    setCount(count - 1);
-  };
   return (
     <div
       style={{
@@ -32,20 +26,20 @@ export const PostCard = ({ post }) => {
       <div style={{ marginRight: '40px' }}>
         <Icon
           icon="teenyicons:up-solid"
-          color={count > 0 ? 'blue' : 'gray'}
+          color={post.upvotes - post.downvotes > 0 ? 'blue' : 'gray'}
           width="30"
           height="30"
           style={{ cursor: 'pointer' }}
-          onClick={upPost}
+          onClick={() => dispatch({ type: 'UPVOTE_POSTS', payload: post })}
         />
-        <div style={{ fontSize: '12px' }}>{count}</div>
+        <div style={{ fontSize: '12px' }}>{post.upvotes - post.downvotes}</div>
         <Icon
           icon="teenyicons:down-solid"
-          color={count < 0 ? 'red' : 'gray'}
+          color={post.upvotes - post.downvotes < 0 ? 'red' : 'gray'}
           width="30"
           height="30"
           style={{ cursor: 'pointer' }}
-          onClick={downPost}
+          onClick={() => dispatch({ type: 'DOWNVOTE_POSTS', payload: post })}
         />
       </div>
       <div
