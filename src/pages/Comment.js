@@ -6,13 +6,10 @@ import { Icon } from '@iconify/react';
 import { PostCard } from '../components/PostCard';
 
 export const Comment = () => {
-  const { productId } = useParams();
+  const { postId } = useParams();
   const { state, dispatch } = useContext(MyContext);
-  const [post, setPost] = useState({});
 
-  useEffect(() => {
-    setPost(state.allPosts.find((p) => p.id == productId));
-  }, []);
+  const post = state.allPosts.find((p) => p.postId == postId);
 
   return (
     <Hero>
@@ -49,7 +46,7 @@ export const Comment = () => {
             <div style={{ marginRight: '40px' }}>
               <Icon
                 icon="teenyicons:up-solid"
-                color={post.upvotes - post.downvotes > 0 ? 'blue' : 'gray'}
+                color={post?.upvotes - post?.downvotes > 0 ? 'blue' : 'gray'}
                 width="30"
                 height="30"
                 style={{ cursor: 'pointer' }}
@@ -58,11 +55,11 @@ export const Comment = () => {
                 }
               />
               <div style={{ fontSize: '12px' }}>
-                {post.upvotes - post.downvotes}
+                {post?.upvotes - post?.downvotes}
               </div>
               <Icon
                 icon="teenyicons:down-solid"
-                color={post.upvotes - post.downvotes < 0 ? 'red' : 'gray'}
+                color={post?.upvotes - post?.downvotes < 0 ? 'red' : 'gray'}
                 width="30"
                 height="30"
                 style={{ cursor: 'pointer' }}
@@ -179,10 +176,10 @@ export const Comment = () => {
             </div>
           </div>
           <div>
-            {post.comments === 0 ? (
+            {post?.comments === 0 ? (
               <p>No comments here</p>
             ) : (
-              post.comments?.map((comment) => (
+              post?.comments?.map((comment) => (
                 <div style={{ display: 'flex' }}>
                   <img
                     src={comment.picUrl}
